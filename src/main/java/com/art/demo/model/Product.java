@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
@@ -25,7 +24,6 @@ import java.math.BigDecimal;
 @ToString
 @Getter
 @Setter
-@Accessors(chain = true)
 @Entity
 @Table(name = "products")
 @NoArgsConstructor

@@ -43,8 +43,7 @@ public class ProductService implements CRUD<ProductDto>, NameFinder<ProductDto> 
 
     @Override
     public ProductDto findById(final long id) {
-        return toDto(productRepository.findById(id)
-                             .orElseThrow(() -> new NoEntityFound("id " + id, Product.class)));
+        return toDto(getById(id));
     }
 
     @Override
@@ -68,7 +67,18 @@ public class ProductService implements CRUD<ProductDto>, NameFinder<ProductDto> 
 
     @Override
     public ProductDto findByName(final String name) {
-        return toDto(productRepository.findByName(name)
-                             .orElseThrow(() -> new NoEntityFound("name " + name, Product.class)));
+        return toDto((productRepository.findByName(name)
+                .orElseThrow(() -> new NoEntityFound("name " + name, Product.class))));
+    }
+
+    public List<ProductDto> findByStringValue(final String value) {
+        return productRepository.findByNameContainsOrManufacturerContainsIgnoreCase(value, value).stream()
+                .map(ProductMapper::toDto)
+                .toList();
+    }
+
+    Product getById(final long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NoEntityFound("id " + id, Product.class));
     }
 }

@@ -38,8 +38,8 @@ public class FoodController implements ControllerCrud<FoodDto> {
 
     @Override
     public ResponseEntity<EntityListContainer<FoodDto>> findAll() {
-        final EntityListContainer<FoodDto> entityListContainer = new EntityListContainer<>("Food product list",
-                                                                                           foodService.findAll());
+        final EntityListContainer<FoodDto> entityListContainer =
+                new EntityListContainer<>("Food product list", foodService.findAll());
         return ResponseEntity.ok(entityListContainer);
     }
 
