@@ -1,5 +1,6 @@
 package com.art.demo.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +23,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode
 @Table(name = "orders")
 @NoArgsConstructor
 public class Order {
