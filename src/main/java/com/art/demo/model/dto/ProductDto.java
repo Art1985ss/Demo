@@ -1,9 +1,7 @@
 package com.art.demo.model.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
@@ -15,10 +13,8 @@ import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@NoArgsConstructor
 @Getter
 @Setter
-@Accessors(chain = true)
 public class ProductDto implements Serializable {
     private long id;
     @NotBlank(message = "Name for the product can't be blank.")

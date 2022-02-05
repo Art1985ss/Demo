@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
+
     public static User fromDto(final UserDto userDto) {
         return new User()
                 .setId(userDto.getId())

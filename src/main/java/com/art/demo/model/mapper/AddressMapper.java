@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AddressMapper {
+
     public static Address fromDto(final AddressDto addressDto) {
         return new Address()
                 .setId(addressDto.getId())

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductMapper {
+
     public static Product fromDto(final ProductDto productDto) {
         Product product;
         if (productDto == null) return null;

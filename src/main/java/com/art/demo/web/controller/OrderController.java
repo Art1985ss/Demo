@@ -3,7 +3,6 @@ package com.art.demo.web.controller;
 import com.art.demo.model.dto.EntityListContainer;
 import com.art.demo.model.dto.EntityMapContainer;
 import com.art.demo.model.dto.OrderDto;
-import com.art.demo.model.dto.ProductDto;
 import com.art.demo.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,17 +54,17 @@ public class OrderController implements ControllerCrud<OrderDto> {
     }
 
     @GetMapping("/{id}/products")
-    public ResponseEntity<EntityMapContainer<ProductDto, BigDecimal>> getOrderProducts(@PathVariable final long id) {
-        final EntityMapContainer<ProductDto, BigDecimal> orderProducts =
-                new EntityMapContainer<>("Products in this order", orderService.getOrderProducts(id));
+    public ResponseEntity<EntityMapContainer<String, String>> getOrderProducts(@PathVariable final long id) {
+        final EntityMapContainer<String, String> orderProducts =
+                new EntityMapContainer<>("Products in order : " + id, orderService.findById(id).getProductMap());
         return ResponseEntity.ok(orderProducts);
     }
 
     @PutMapping("/{id}/products/{prod_id}/amount/{amount}")
-    public RedirectView addProducts(@PathVariable long id,
-                                    @PathVariable("prod_id") long productId,
-                                    @PathVariable BigDecimal amount) {
+    public ResponseEntity<Void> addProducts(@PathVariable long id,
+                                            @PathVariable("prod_id") long productId,
+                                            @PathVariable BigDecimal amount) {
         orderService.addProduct(id, productId, amount);
-        return new RedirectView("/" + id + "/products");
+        return ResponseEntity.noContent().build();
     }
 }

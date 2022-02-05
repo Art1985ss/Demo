@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @ToString
 @Getter
@@ -45,5 +46,15 @@ public abstract class Product {
     @PositiveOrZero(message = "Product discount can't be negative.")
     @Max(message = "Let's be reasonable...", value = 100)
     protected BigDecimal discount;
+
+    public BigDecimal getTotalPrice() {
+        return pricePerUnit.subtract(discount.divide(new BigDecimal("100"), RoundingMode.DOWN).multiply(pricePerUnit));
+    }
+
+    public String getType() {
+        return type();
+    }
+
+    protected abstract String type();
 }
 

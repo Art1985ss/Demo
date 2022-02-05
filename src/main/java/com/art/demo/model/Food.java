@@ -21,4 +21,9 @@ public class Food extends Product {
     @Future(message = "Date should be in the future")
     @NotNull(message = "Expiration date should be present for food products")
     private LocalDate expirationDate;
+
+    @Override
+    protected String type() {
+        return "Food product:" + name;
+    }
 }

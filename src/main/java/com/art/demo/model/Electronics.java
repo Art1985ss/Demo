@@ -16,4 +16,9 @@ import javax.validation.constraints.Positive;
 public class Electronics extends Product {
     @Positive(message = "Energy consumption can't be less then zero.")
     private int energyConsumption;
+
+    @Override
+    protected String type() {
+        return "Electronics product:" + name;
+    }
 }

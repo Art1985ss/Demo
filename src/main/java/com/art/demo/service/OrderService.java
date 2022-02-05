@@ -4,9 +4,7 @@ import com.art.demo.exceptions.NoEntityFound;
 import com.art.demo.model.Order;
 import com.art.demo.model.Product;
 import com.art.demo.model.dto.OrderDto;
-import com.art.demo.model.dto.ProductDto;
 import com.art.demo.model.mapper.OrderMapper;
-import com.art.demo.model.mapper.ProductMapper;
 import com.art.demo.repository.OrdersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.art.demo.model.mapper.OrderMapper.fromDto;
 import static com.art.demo.model.mapper.OrderMapper.toDto;
@@ -62,17 +59,18 @@ public class OrderService implements CRUD<OrderDto> {
         ordersRepository.deleteById(id);
     }
 
-    public Map<ProductDto, BigDecimal> getOrderProducts(final long id) {
-        return getId(id).getProductsMap().entrySet().stream()
-                .collect(Collectors.toMap(entry -> ProductMapper.toDto(entry.getKey()), Map.Entry::getValue));
-    }
 
     public void addProduct(final long id,
                            final long productId,
                            final BigDecimal amount) {
         final Product product = productService.getById(productId);
         final Order order = ordersRepository.getById(id);
-        order.getProductsMap().put(product, amount);
+        final Map<Product, BigDecimal> productsMap = order.getProductsMap();
+        if (productsMap.containsKey(product)) {
+            productsMap.put(product, productsMap.get(product).add(amount));
+        } else {
+            productsMap.put(product, amount);
+        }
         ordersRepository.save(order);
     }
 
