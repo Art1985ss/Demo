@@ -1,22 +1,24 @@
 package com.art.demo.model;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Positive;
 
 @Getter
-@SuperBuilder
-@ToString(callSuper = true)
+@Setter
 @Entity
 @Table(name = "electronics")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Electronics extends Product {
     @Positive(message = "Energy consumption can't be less then zero.")
     private int energyConsumption;
+
+    @Override
+    protected String type() {
+        return "Electronics product:" + name;
+    }
 }
