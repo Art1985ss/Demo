@@ -3,9 +3,6 @@ package com.art.demo.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -19,7 +16,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -46,12 +42,4 @@ public class User {
     private List<Roles> authorities = new ArrayList<>();
     @OneToOne(cascade = {javax.persistence.CascadeType.PERSIST})
     private Address address;
-
-    @Transactional
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities.stream()
-                .map(String::valueOf)
-                .map(SimpleGrantedAuthority::new)
-                .toList();
-    }
 }

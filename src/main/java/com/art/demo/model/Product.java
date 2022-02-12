@@ -48,7 +48,7 @@ public abstract class Product {
     protected BigDecimal discount;
 
     public BigDecimal getTotalPrice() {
-        return pricePerUnit.subtract(discount.divide(new BigDecimal("100"), RoundingMode.DOWN).multiply(pricePerUnit));
+        return pricePerUnit.subtract(discount.divide(new BigDecimal("100"), 2, RoundingMode.DOWN).multiply(pricePerUnit));
     }
 
     public String getType() {

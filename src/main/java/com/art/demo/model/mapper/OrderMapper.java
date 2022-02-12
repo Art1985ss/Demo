@@ -16,11 +16,13 @@ import static java.util.stream.Collectors.toMap;
 public class OrderMapper {
 
     public static Order fromDto(final OrderDto orderDto) {
+        if (orderDto == null) return null;
         return new Order()
                 .setId(orderDto.getId());
     }
 
     public static OrderDto toDto(final Order order) {
+        if (order == null) return null;
         final BigDecimal totalPrice = order.getProductsMap().entrySet().stream()
                 .map(entry -> entry.getKey().getTotalPrice().multiply(entry.getValue()))
                 .reduce(BigDecimal::add)

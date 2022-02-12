@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 public class UserMapper {
 
     public static User fromDto(final UserDto userDto) {
+        if (userDto == null) return null;
         return new User()
                 .setId(userDto.getId())
                 .setUsername(userDto.getUsername())
@@ -21,6 +22,7 @@ public class UserMapper {
     }
 
     public static UserDto toDto(final User user) {
+        if (user == null) return null;
         return new UserDto()
                 .setId(user.getId())
                 .setUsername(user.getUsername())
