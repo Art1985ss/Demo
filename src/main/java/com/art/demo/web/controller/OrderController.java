@@ -67,4 +67,9 @@ public class OrderController implements ControllerCrud<OrderDto> {
         orderService.addProduct(id, productId, amount);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/undo")
+    public ResponseEntity<OrderDto> undo(@PathVariable long id) {
+        return ResponseEntity.ok(orderService.undo(id));
+    }
 }

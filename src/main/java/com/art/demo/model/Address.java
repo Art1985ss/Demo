@@ -34,4 +34,13 @@ public class Address {
     @Positive(message = "Apartment number can't be negative or zero.")
     @Column(nullable = false)
     private int apartmentNumber;
+
+    public Address(final Address address) {
+        this.id = address.id;
+        this.country = address.country;
+        this.city = address.city;
+        this.street = address.street;
+        this.houseNumber = address.houseNumber;
+        this.apartmentNumber = address.apartmentNumber;
+    }
 }

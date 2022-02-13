@@ -19,11 +19,11 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Getter
 @Setter
 @Entity
-@EqualsAndHashCode
 @Table(name = "orders")
 @NoArgsConstructor
 public class Order {
@@ -39,4 +39,39 @@ public class Order {
     @MapKeyJoinColumn(table = "products", name = "product_id", referencedColumnName = "id")
     @Column(name = "amount")
     private Map<Product, BigDecimal> productsMap = new HashMap<>();
+
+    public State getState() {
+        return new State(this);
+    }
+
+    public void setState(final State state) {
+        this.id = state.id;
+        this.user = new User(state.user);
+        this.productsMap = new HashMap<>(state.productMap);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Order order = (Order) o;
+        return id == order.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    static class State {
+        private final long id;
+        private final User user;
+        private final Map<Product, BigDecimal> productMap;
+
+        State(final Order order) {
+            this.id = order.getId();
+            this.user = new User(order.getUser());
+            this.productMap = new HashMap<>(order.getProductsMap());
+        }
+    }
 }

@@ -42,4 +42,15 @@ public class User {
     private List<Roles> authorities = new ArrayList<>();
     @OneToOne(cascade = {javax.persistence.CascadeType.PERSIST})
     private Address address;
+
+    public User(final User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.age = user.getAge();
+        this.password = user.getPassword();
+        this.authorities = user.getAuthorities();
+        this.address = new Address(user.getAddress());
+    }
 }

@@ -4,6 +4,7 @@ import com.art.demo.config.WebSecurityConfig;
 import com.art.demo.exceptions.NoEntityFound;
 import com.art.demo.exceptions.ValidationException;
 import com.art.demo.model.Order;
+import com.art.demo.model.OrderHistoryService;
 import com.art.demo.model.Product;
 import com.art.demo.model.User;
 import com.art.demo.model.dto.OrderDto;
@@ -25,14 +26,18 @@ public class OrderService implements CRUD<OrderDto> {
     private final OrdersRepository ordersRepository;
     private final UserRepository userRepository;
     private final ProductService productService;
-    private final Validator<Order> validator;
+    private final OrderHistoryService orderHistoryService;
+    private final Validator<Order> orderUserValidator;
 
     @Autowired
-    public OrderService(final OrdersRepository ordersRepository, final UserRepository userRepository, final ProductService productService) {
+    public OrderService(final OrdersRepository ordersRepository,
+                        final UserRepository userRepository,
+                        final ProductService productService) {
         this.ordersRepository = ordersRepository;
         this.userRepository = userRepository;
         this.productService = productService;
-        validator = order -> {
+        this.orderHistoryService = OrderHistoryService.getInstance();
+        orderUserValidator = order -> {
             final User user = getUser();
             if (!order.getUser().equals(user))
                 throw new ValidationException("Orders can be manipulated only by users who created it!");
@@ -45,12 +50,17 @@ public class OrderService implements CRUD<OrderDto> {
         final User user = getUser();
         final Order order = fromDto(orderDto);
         order.setUser(user);
+        orderHistoryService.save(order);
         return toDto(ordersRepository.save(order));
     }
 
     @Override
     public void update(final OrderDto orderDto, final long id) {
-        ordersRepository.save(fromDto(orderDto).setId(id));
+        final Order order1 = getId(id);
+        orderUserValidator.validate(order1);
+        orderHistoryService.save(order1);
+        final Order order = fromDto(orderDto).setId(id);
+        ordersRepository.save(order);
     }
 
     @Override
@@ -69,21 +79,24 @@ public class OrderService implements CRUD<OrderDto> {
 
     @Override
     public void delete(final OrderDto orderDto) {
-        ordersRepository.delete(fromDto(orderDto));
+        final Order order = fromDto(orderDto);
+        ordersRepository.delete(order);
+        orderHistoryService.remove(order);
     }
 
     @Override
     public void deleteById(final long id) {
         ordersRepository.deleteById(id);
+        final Order order = getId(id);
+        orderHistoryService.remove(order);
     }
-
 
     public void addProduct(final long id,
                            final long productId,
                            final BigDecimal amount) {
         final Product product = productService.getById(productId);
         final Order order = ordersRepository.getById(id);
-        validator.validate(order);
+        orderHistoryService.save(order);
         final Map<Product, BigDecimal> productsMap = order.getProductsMap();
         if (productsMap.containsKey(product)) {
             productsMap.put(product, productsMap.get(product).add(amount));
@@ -93,10 +106,17 @@ public class OrderService implements CRUD<OrderDto> {
         ordersRepository.save(order);
     }
 
+    public OrderDto undo(final long id) {
+        final Order order = getId(id);
+        orderHistoryService.undo(order);
+        ordersRepository.save(order);
+        return OrderMapper.toDto(order);
+    }
+
     private Order getId(final long id) {
         final Order order = ordersRepository.findById(id)
                 .orElseThrow(() -> new NoEntityFound("id", Order.class));
-        validator.validate(order);
+        orderUserValidator.validate(order);
         return order;
     }
 
