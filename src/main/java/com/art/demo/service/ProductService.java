@@ -16,28 +16,30 @@ import static com.art.demo.model.mapper.ProductMapper.toDto;
 
 @Service
 public class ProductService implements CRUD<ProductDto>, NameFinder<ProductDto> {
-    protected final ProductRepository productRepository;
-    private final Validator<Product> productValidator;
+    private final ProductRepository productRepository;
+    private final ValidationService<Product> validationService;
 
     @Autowired
     public ProductService(final ProductRepository productRepository) {
         this.productRepository = productRepository;
-        productValidator = product -> productRepository.findByName(product.getName()).ifPresent(prod -> {
+        final Validator<Product> validateProductHasUniqueName = product -> productRepository.findByName(product.getName()).ifPresent(prod -> {
             throw new ValidationException("Product with name " + prod.getName() + " already exists in database");
         });
+        validationService = new ValidationService<>();
+        validationService.addRule(validateProductHasUniqueName);
     }
 
     @Override
     public ProductDto create(final ProductDto productDto) {
         final Product productToSave = fromDto(productDto);
-        productValidator.validate(productToSave);
+        validationService.validate(productToSave);
         return toDto(productRepository.save(productToSave));
     }
 
     @Override
     public void update(final ProductDto productDto, final long id) {
         final Product product = fromDto(productDto).setId(id);
-        productValidator.validate(product);
+        validationService.validate(product);
         productRepository.save(product);
     }
 

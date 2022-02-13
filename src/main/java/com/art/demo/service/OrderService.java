@@ -27,7 +27,7 @@ public class OrderService implements CRUD<OrderDto> {
     private final UserRepository userRepository;
     private final ProductService productService;
     private final OrderHistoryService orderHistoryService;
-    private final Validator<Order> orderUserValidator;
+    private final ValidationService<Order> validationService;
 
     @Autowired
     public OrderService(final OrdersRepository ordersRepository,
@@ -37,11 +37,13 @@ public class OrderService implements CRUD<OrderDto> {
         this.userRepository = userRepository;
         this.productService = productService;
         this.orderHistoryService = OrderHistoryService.getInstance();
-        orderUserValidator = order -> {
+        final Validator<Order> validator = order -> {
             final User user = getUser();
             if (!order.getUser().equals(user))
                 throw new ValidationException("Orders can be manipulated only by users who created it!");
         };
+        validationService = new ValidationService<>();
+        validationService.addRule(validator);
 
     }
 
@@ -57,7 +59,7 @@ public class OrderService implements CRUD<OrderDto> {
     @Override
     public void update(final OrderDto orderDto, final long id) {
         final Order order1 = getId(id);
-        orderUserValidator.validate(order1);
+        validationService.validate(order1);
         orderHistoryService.save(order1);
         final Order order = fromDto(orderDto).setId(id);
         ordersRepository.save(order);
@@ -116,7 +118,7 @@ public class OrderService implements CRUD<OrderDto> {
     private Order getId(final long id) {
         final Order order = ordersRepository.findById(id)
                 .orElseThrow(() -> new NoEntityFound("id", Order.class));
-        orderUserValidator.validate(order);
+        validationService.validate(order);
         return order;
     }
 

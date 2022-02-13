@@ -20,17 +20,19 @@ import static com.art.demo.model.mapper.UserMapper.toDto;
 public class UserService implements CRUD<UserDto> {
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
-    private final Validator<User> validator;
+    private final ValidationService<User> validationService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(final AddressRepository addressRepository, final UserRepository userRepository, final PasswordEncoder passwordEncoder) {
         this.addressRepository = addressRepository;
         this.userRepository = userRepository;
-        this.validator = user -> userRepository.findByUsername(user.getUsername()).ifPresent(usr -> {
+        final Validator<User> userHasUniqueUsernameValidation = user -> userRepository.findByUsername(user.getUsername()).ifPresent(usr -> {
             throw new ValidationException("User with username " + user.getUsername() + " already exists in database");
         });
         this.passwordEncoder = passwordEncoder;
+        validationService = new ValidationService<>();
+        validationService.addRule(userHasUniqueUsernameValidation);
     }
 
     @Override
@@ -38,7 +40,7 @@ public class UserService implements CRUD<UserDto> {
         final User user = fromDto(userDto)
                 .setAuthorities(List.of(Roles.ROLE_USER))
                 .setPassword(passwordEncoder.encode(userDto.getPassword()));
-        validator.validate(user);
+        validationService.validate(user);
         addressRepository.save(user.getAddress());
         return toDto(userRepository.save(user));
     }
@@ -51,7 +53,7 @@ public class UserService implements CRUD<UserDto> {
         } else {
             user.setPassword(getById(user.getId()).getPassword());
         }
-        validator.validate(user);
+        validationService.validate(user);
         addressRepository.save(user.getAddress());
         userRepository.save(user);
     }
