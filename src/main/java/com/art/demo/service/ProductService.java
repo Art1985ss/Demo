@@ -54,17 +54,8 @@ public class ProductService implements CRUD<ProductDto>, NameFinder<ProductDto> 
     }
 
     @Override
-    public void delete(final ProductDto productDto) {
-        productRepository.delete(fromDto(productDto));
-    }
-
-    @Override
     public void deleteById(final long id) {
-        try {
-            productRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new NoEntityFound("id " + id, Product.class);
-        }
+        productRepository.deleteById(id);
     }
 
     @Override

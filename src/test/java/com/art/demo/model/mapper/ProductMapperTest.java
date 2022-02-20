@@ -11,24 +11,14 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ProductMapperTest {
+public class ProductMapperTest {
     private static final long ID = 1;
     private static final String TEST_PRODUCT_NAME = "TestProductName";
     private static final String TEST_PRODUCT_MANUFACTURER = "TestProductManufacturer";
     private static final BigDecimal PRICE_PER_UNIT = new BigDecimal("100");
     private static final BigDecimal DISCOUNT = new BigDecimal(50);
-    public static final Product TEST_PRODUCT = new Food()
-            .setId(ID)
-            .setName(TEST_PRODUCT_NAME)
-            .setManufacturer(TEST_PRODUCT_MANUFACTURER)
-            .setPricePerUnit(PRICE_PER_UNIT)
-            .setDiscount(DISCOUNT);
-    private static final ProductDto TEST_DTO_PRODUCT = new FoodDto()
-            .setId(ID)
-            .setName(TEST_PRODUCT_NAME)
-            .setManufacturer(TEST_PRODUCT_MANUFACTURER)
-            .setPricePerUnit(PRICE_PER_UNIT)
-            .setDiscount(DISCOUNT);
+    public static final Product TEST_PRODUCT = createProduct();
+    private static final ProductDto TEST_DTO_PRODUCT = createProductDto();
 
     @Test
     void fromDto() {
@@ -52,5 +42,23 @@ class ProductMapperTest {
                 () -> assertEquals(PRICE_PER_UNIT, productDto.getPricePerUnit()),
                 () -> assertEquals(DISCOUNT, productDto.getDiscount())
         );
+    }
+
+    public static Product createProduct() {
+        return new Food()
+                .setId(ID)
+                .setName(TEST_PRODUCT_NAME)
+                .setManufacturer(TEST_PRODUCT_MANUFACTURER)
+                .setPricePerUnit(PRICE_PER_UNIT)
+                .setDiscount(DISCOUNT);
+    }
+
+    public static ProductDto createProductDto() {
+        return new FoodDto()
+                .setId(ID)
+                .setName(TEST_PRODUCT_NAME)
+                .setManufacturer(TEST_PRODUCT_MANUFACTURER)
+                .setPricePerUnit(PRICE_PER_UNIT)
+                .setDiscount(DISCOUNT);
     }
 }

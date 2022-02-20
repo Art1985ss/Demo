@@ -15,18 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class OrderMapperTest {
+public class OrderMapperTest {
     private static final int ID = 1;
     private static final Map<String, String> TEST_DRO_PRODUCT_MAP = Collections.emptyMap();
     private static final Map<Product, BigDecimal> TEST_PRODUCT_MAP = new HashMap<>();
-    private static final Order TEST_ORDER = new Order()
-            .setId(ID)
-            .setUser(new User())
-            .setProductsMap(Collections.emptyMap());
-    private static final OrderDto TEST_ORDER_DTO = new OrderDto()
-            .setId(ID)
-            .setTotalPrice(new BigDecimal("10"))
-            .setProductMap(TEST_DRO_PRODUCT_MAP);
+    private static final Order TEST_ORDER = createOrder();
+
+    private static final OrderDto TEST_ORDER_DTO = createDtoOrder();
 
 
     @Test
@@ -48,5 +43,19 @@ class OrderMapperTest {
                 () -> assertEquals(new BigDecimal("500.00"), orderDto.getTotalPrice()),
                 () -> assertEquals(1, orderDto.getProductMap().size())
         );
+    }
+
+    public static Order createOrder() {
+        return new Order()
+                .setId(ID)
+                .setUser(new User())
+                .setProductsMap(new HashMap<>());
+    }
+
+    public static OrderDto createDtoOrder() {
+        return new OrderDto()
+                .setId(ID)
+                .setTotalPrice(new BigDecimal("10"))
+                .setProductMap(TEST_DRO_PRODUCT_MAP);
     }
 }

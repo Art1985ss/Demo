@@ -58,7 +58,7 @@ public class OrderService implements CRUD<OrderDto> {
 
     @Override
     public void update(final OrderDto orderDto, final long id) {
-        final Order order1 = getId(id);
+        final Order order1 = getById(id);
         validationService.validate(order1);
         orderHistoryService.save(order1);
         final Order order = fromDto(orderDto).setId(id);
@@ -67,7 +67,9 @@ public class OrderService implements CRUD<OrderDto> {
 
     @Override
     public OrderDto findById(final long id) {
-        return toDto(getId(id));
+        final Order order = getById(id);
+        validationService.validate(order);
+        return toDto(order);
     }
 
     @Override
@@ -80,16 +82,10 @@ public class OrderService implements CRUD<OrderDto> {
     }
 
     @Override
-    public void delete(final OrderDto orderDto) {
-        final Order order = fromDto(orderDto);
-        ordersRepository.delete(order);
-        orderHistoryService.remove(order);
-    }
-
-    @Override
     public void deleteById(final long id) {
+        final Order order = getById(id);
+        validationService.validate(order);
         ordersRepository.deleteById(id);
-        final Order order = getId(id);
         orderHistoryService.remove(order);
     }
 
@@ -109,13 +105,14 @@ public class OrderService implements CRUD<OrderDto> {
     }
 
     public OrderDto undo(final long id) {
-        final Order order = getId(id);
+        final Order order = getById(id);
+        validationService.validate(order);
         orderHistoryService.undo(order);
         ordersRepository.save(order);
         return OrderMapper.toDto(order);
     }
 
-    private Order getId(final long id) {
+    private Order getById(final long id) {
         final Order order = ordersRepository.findById(id)
                 .orElseThrow(() -> new NoEntityFound("id", Order.class));
         validationService.validate(order);

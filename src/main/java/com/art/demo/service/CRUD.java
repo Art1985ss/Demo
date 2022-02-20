@@ -11,7 +11,5 @@ public interface CRUD<T> {
 
     List<T> findAll();
 
-    void delete(final T t);
-
     void deleteById(final long id);
 }

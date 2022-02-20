@@ -11,31 +11,15 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class UserMapperTest {
+public class UserMapperTest {
     private static final int ID = 1;
     private static final int AGE = 20;
     private static final String USERNAME = "username";
     private static final String PASSWORD = "pass";
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME = "lastName";
-    private static final User TEST_USER = new User()
-            .setId(ID)
-            .setAge(AGE)
-            .setUsername(USERNAME)
-            .setPassword(PASSWORD)
-            .setAddress(null)
-            .setFirstName(FIRST_NAME)
-            .setLastName(LAST_NAME)
-            .setAuthorities(List.of(ROLE_USER));
-    private static final UserDto TEST_USER_DTO = new UserDto()
-            .setId(ID)
-            .setAge(AGE)
-            .setUsername(USERNAME)
-            .setPassword(PASSWORD)
-            .setAddress(null)
-            .setFirstName(FIRST_NAME)
-            .setLastName(LAST_NAME)
-            .setAuthorities(List.of(ROLE_USER));
+    private static final User TEST_USER = createUser();
+    private static final UserDto TEST_USER_DTO = createUserDto();
 
     @Test
     void fromDto() {
@@ -61,5 +45,29 @@ class UserMapperTest {
                 () -> assertEquals(LAST_NAME, userDto.getLastName()),
                 () -> assertNull(userDto.getAuthorities())
         );
+    }
+
+    public static User createUser() {
+        return new User()
+                .setId(ID)
+                .setAge(AGE)
+                .setUsername(USERNAME)
+                .setPassword(PASSWORD)
+                .setAddress(null)
+                .setFirstName(FIRST_NAME)
+                .setLastName(LAST_NAME)
+                .setAuthorities(List.of(ROLE_USER));
+    }
+
+    public static UserDto createUserDto() {
+        return new UserDto()
+                .setId(ID)
+                .setAge(AGE)
+                .setUsername(USERNAME)
+                .setPassword(PASSWORD)
+                .setAddress(null)
+                .setFirstName(FIRST_NAME)
+                .setLastName(LAST_NAME)
+                .setAuthorities(List.of(ROLE_USER));
     }
 }

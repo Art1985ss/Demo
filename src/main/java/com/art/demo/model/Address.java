@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -42,5 +43,18 @@ public class Address {
         this.street = address.street;
         this.houseNumber = address.houseNumber;
         this.apartmentNumber = address.apartmentNumber;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Address address = (Address) o;
+        return id == address.id && houseNumber == address.houseNumber && apartmentNumber == address.apartmentNumber && country.equals(address.country) && city.equals(address.city) && street.equals(address.street);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, country, city, street, houseNumber, apartmentNumber);
     }
 }

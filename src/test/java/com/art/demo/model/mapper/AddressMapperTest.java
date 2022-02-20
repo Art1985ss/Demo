@@ -7,27 +7,15 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class AddressMapperTest {
+public class AddressMapperTest {
     private static final String TEST_COUNTRY = "TestCountry";
     private static final String TEST_CITY = "TestCity";
     private static final String TEST_STREET = "TestStreet";
     private static final int ID = 1;
     private static final int HOUSE_NUMBER = 2;
     private static final int APARTMENT_NUMBER = 3;
-    public static final Address TEST_ADDRESS = new Address()
-            .setId(ID)
-            .setCountry(TEST_COUNTRY)
-            .setCity(TEST_CITY)
-            .setStreet(TEST_STREET)
-            .setHouseNumber(HOUSE_NUMBER)
-            .setApartmentNumber(APARTMENT_NUMBER);
-    public static final AddressDto TEST_ADDRESS_DTO = new AddressDto()
-            .setId(ID)
-            .setCountry(TEST_COUNTRY)
-            .setCity(TEST_CITY)
-            .setStreet(TEST_STREET)
-            .setHouseNumber(HOUSE_NUMBER)
-            .setApartmentNumber(APARTMENT_NUMBER);
+    private static final Address TEST_ADDRESS = createAddress();
+    private static final AddressDto TEST_ADDRESS_DTO = getAddressDto();
 
     @Test
     void fromDto() {
@@ -53,5 +41,25 @@ class AddressMapperTest {
                 () -> assertEquals(HOUSE_NUMBER, addressDto.getHouseNumber()),
                 () -> assertEquals(APARTMENT_NUMBER, addressDto.getApartmentNumber())
         );
+    }
+
+    public static Address createAddress() {
+        return new Address()
+                .setId(ID)
+                .setCountry(TEST_COUNTRY)
+                .setCity(TEST_CITY)
+                .setStreet(TEST_STREET)
+                .setHouseNumber(HOUSE_NUMBER)
+                .setApartmentNumber(APARTMENT_NUMBER);
+    }
+
+    public static AddressDto getAddressDto() {
+        return new AddressDto()
+                .setId(ID)
+                .setCountry(TEST_COUNTRY)
+                .setCity(TEST_CITY)
+                .setStreet(TEST_STREET)
+                .setHouseNumber(HOUSE_NUMBER)
+                .setApartmentNumber(APARTMENT_NUMBER);
     }
 }
