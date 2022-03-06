@@ -40,11 +40,6 @@ public class ElectronicsService implements CRUD<ElectronicsDto> {
     }
 
     @Override
-    public void delete(final ElectronicsDto electronicsDto) {
-        productService.delete(electronicsDto);
-    }
-
-    @Override
     public void deleteById(final long id) {
         productService.deleteById(id);
     }

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 public class AddressMapper {
 
     public static Address fromDto(final AddressDto addressDto) {
+        if (addressDto == null) return null;
         return new Address()
                 .setId(addressDto.getId())
                 .setCountry(addressDto.getCountry())
@@ -19,6 +20,7 @@ public class AddressMapper {
     }
 
     public static AddressDto toDto(final Address address) {
+        if (address == null) return null;
         return new AddressDto()
                 .setId(address.getId())
                 .setCountry(address.getCountry())

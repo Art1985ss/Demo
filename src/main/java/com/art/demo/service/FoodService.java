@@ -39,11 +39,6 @@ public class FoodService implements CRUD<FoodDto> {
     }
 
     @Override
-    public void delete(final FoodDto foodDto) {
-        productService.delete(foodDto);
-    }
-
-    @Override
     public void deleteById(final long id) {
         productService.deleteById(id);
     }

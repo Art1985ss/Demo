@@ -1,6 +1,7 @@
 package com.art.demo.model;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -14,7 +15,10 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getAuthorities();
+        return user.getAuthorities().stream()
+                .map(String::valueOf)
+                .map(SimpleGrantedAuthority::new)
+                .toList();
     }
 
     @Override
