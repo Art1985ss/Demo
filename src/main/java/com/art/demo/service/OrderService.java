@@ -94,6 +94,7 @@ public class OrderService implements CRUD<OrderDto> {
                            final BigDecimal amount) {
         final Product product = productService.getById(productId);
         final Order order = ordersRepository.getById(id);
+        validationService.validate(order);
         orderHistoryService.save(order);
         final Map<Product, BigDecimal> productsMap = order.getProductsMap();
         if (productsMap.containsKey(product)) {

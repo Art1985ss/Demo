@@ -15,8 +15,10 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping(OrderController.ORDERS_BASE)
 public class OrderController implements ControllerCrud<OrderDto> {
+    public static final String ID_PRODUCTS_PROD_ID_AMOUNT_AMOUNT_ENDPOINT = "/{id}/products/{prod_id}/amount/{amount}";
+    protected static final String ORDERS_BASE = "/orders";
     private final OrderService orderService;
 
     public OrderController(final OrderService orderService) {
@@ -60,7 +62,7 @@ public class OrderController implements ControllerCrud<OrderDto> {
         return ResponseEntity.ok(orderProducts);
     }
 
-    @PutMapping("/{id}/products/{prod_id}/amount/{amount}")
+    @PutMapping(ID_PRODUCTS_PROD_ID_AMOUNT_AMOUNT_ENDPOINT)
     public ResponseEntity<Void> addProducts(@PathVariable long id,
                                             @PathVariable("prod_id") long productId,
                                             @PathVariable BigDecimal amount) {
